@@ -46,20 +46,20 @@ public class SHealthConnector {
 
         mKeySet = new HashSet<PermissionKey>();
         mKeySet.add(new PermissionKey(HealthConstants.StepCount.HEALTH_DATA_TYPE, PermissionType.READ));
-        mKeySet.add(new PermissionKey(HealthConstants.Exercise.HEALTH_DATA_TYPE, PermissionType.READ));
+        // mKeySet.add(new PermissionKey(HealthConstants.Exercise.HEALTH_DATA_TYPE, PermissionType.READ));
         mKeySet.add(new PermissionKey(HealthConstants.Sleep.HEALTH_DATA_TYPE, PermissionType.READ));
-        mKeySet.add(new PermissionKey(HealthConstants.SleepStage.HEALTH_DATA_TYPE, PermissionType.READ));
-        mKeySet.add(new PermissionKey(HealthConstants.FoodIntake.HEALTH_DATA_TYPE, PermissionType.READ));
-        mKeySet.add(new PermissionKey(HealthConstants.WaterIntake.HEALTH_DATA_TYPE, PermissionType.READ));
-        mKeySet.add(new PermissionKey(HealthConstants.CaffeineIntake.HEALTH_DATA_TYPE, PermissionType.READ));
-        mKeySet.add(new PermissionKey(HealthConstants.HeartRate.HEALTH_DATA_TYPE, PermissionType.READ));
-        mKeySet.add(new PermissionKey(HealthConstants.BodyTemperature.HEALTH_DATA_TYPE, PermissionType.READ));
-        mKeySet.add(new PermissionKey(HealthConstants.BloodPressure.HEALTH_DATA_TYPE, PermissionType.READ));
-        mKeySet.add(new PermissionKey(HealthConstants.BloodGlucose.HEALTH_DATA_TYPE, PermissionType.READ));
-        mKeySet.add(new PermissionKey(HealthConstants.OxygenSaturation.HEALTH_DATA_TYPE, PermissionType.READ));
-        mKeySet.add(new PermissionKey(HealthConstants.HbA1c.HEALTH_DATA_TYPE, PermissionType.READ));
-        mKeySet.add(new PermissionKey(HealthConstants.AmbientTemperature.HEALTH_DATA_TYPE, PermissionType.READ));
-        mKeySet.add(new PermissionKey(HealthConstants.UvExposure.HEALTH_DATA_TYPE, PermissionType.READ));
+        // mKeySet.add(new PermissionKey(HealthConstants.SleepStage.HEALTH_DATA_TYPE, PermissionType.READ));
+        // mKeySet.add(new PermissionKey(HealthConstants.FoodIntake.HEALTH_DATA_TYPE, PermissionType.READ));
+        // mKeySet.add(new PermissionKey(HealthConstants.WaterIntake.HEALTH_DATA_TYPE, PermissionType.READ));
+        // mKeySet.add(new PermissionKey(HealthConstants.CaffeineIntake.HEALTH_DATA_TYPE, PermissionType.READ));
+        // mKeySet.add(new PermissionKey(HealthConstants.HeartRate.HEALTH_DATA_TYPE, PermissionType.READ));
+        // mKeySet.add(new PermissionKey(HealthConstants.BodyTemperature.HEALTH_DATA_TYPE, PermissionType.READ));
+        // mKeySet.add(new PermissionKey(HealthConstants.BloodPressure.HEALTH_DATA_TYPE, PermissionType.READ));
+        // mKeySet.add(new PermissionKey(HealthConstants.BloodGlucose.HEALTH_DATA_TYPE, PermissionType.READ));
+        // mKeySet.add(new PermissionKey(HealthConstants.OxygenSaturation.HEALTH_DATA_TYPE, PermissionType.READ));
+        // mKeySet.add(new PermissionKey(HealthConstants.HbA1c.HEALTH_DATA_TYPE, PermissionType.READ));
+        // mKeySet.add(new PermissionKey(HealthConstants.AmbientTemperature.HEALTH_DATA_TYPE, PermissionType.READ));
+        // mKeySet.add(new PermissionKey(HealthConstants.UvExposure.HEALTH_DATA_TYPE, PermissionType.READ));
     }
 
     /** Connects the plugin to S Health
@@ -108,9 +108,9 @@ public class SHealthConnector {
      * @param startTime     Earliest time of measurement
      * @param endTime      Latest time of measurement
      */
-    public void startReporter(long startTime, long endTime) {
+    public void startReporter(String hcHDT, long startTime, long endTime) {
         if(mReporter != null){
-            mReporter.start(startTime,endTime);
+            mReporter.start(hcHDT, startTime,endTime);
         } else {
             Log.e(APP_TAG, "mReporter == null");
 

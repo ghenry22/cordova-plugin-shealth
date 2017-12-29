@@ -67,9 +67,46 @@ public class DataReporter {
      * @param pStartTime    Earliest time of measurement
      * @param pEndTime      Latest time of measurement
      */
-    public void start(long pStartTime, long pEndTime) {
+    public void start(String hcHDT, long pStartTime, long pEndTime) {
         Log.d(APP_TAG,"Time: " + pStartTime + " - " + pEndTime);
+        if (hcHDT.equals(HealthConstants.StepCount.HEALTH_DATA_TYPE)) {
+            startReadStepCount(pStartTime, pEndTime);
+        } else if (hcHDT.equals(HealthConstants.Exercise.HEALTH_DATA_TYPE)) {
+            startReadExercise(pStartTime, pEndTime);
+        } else if (hcHDT.equals(HealthConstants.Sleep.HEALTH_DATA_TYPE)) {
+            startReadSleep(pStartTime, pEndTime);
+        } else if (hcHDT.equals(HealthConstants.SleepStage.HEALTH_DATA_TYPE)) {
+            startReadSleepStage(pStartTime, pEndTime);
+        } else if (hcHDT.equals(HealthConstants.FoodIntake.HEALTH_DATA_TYPE)) {
+            startReadFoodIntake(pStartTime, pEndTime);
+        } else if (hcHDT.equals(HealthConstants.WaterIntake.HEALTH_DATA_TYPE)) {
+            startReadWaterIntake(pStartTime, pEndTime);
+        } else if (hcHDT.equals(HealthConstants.CaffeineIntake.HEALTH_DATA_TYPE)) {
+            startReadCaffeineIntake(pStartTime, pEndTime);
+        } else if (hcHDT.equals(HealthConstants.HeartRate.HEALTH_DATA_TYPE)) {
+            startReadHeartRate(pStartTime, pEndTime);
+        } else if (hcHDT.equals(HealthConstants.BodyTemperature.HEALTH_DATA_TYPE)) {
+            startReadBodyTemperature(pStartTime, pEndTime);
+        } else if (hcHDT.equals(HealthConstants.BloodPressure.HEALTH_DATA_TYPE)) {
+            startReadBloodPressure(pStartTime, pEndTime);
+        } else if (hcHDT.equals(HealthConstants.BloodGlucose.HEALTH_DATA_TYPE)) {
+            startReadBloodGlucose(pStartTime, pEndTime);
+        } else if (hcHDT.equals(HealthConstants.OxygenSaturation.HEALTH_DATA_TYPE)) {
+            startReadOxygenSaturation(pStartTime, pEndTime);
+        } else if (hcHDT.equals(HealthConstants.HbA1c.HEALTH_DATA_TYPE)) {
+            startReadHbA1c(pStartTime, pEndTime);
+        } else if (hcHDT.equals(HealthConstants.AmbientTemperature.HEALTH_DATA_TYPE)) {
+            startReadAmbientTemperature(pStartTime, pEndTime);
+        } else if (hcHDT.equals(HealthConstants.UvExposure.HEALTH_DATA_TYPE)) {
+            startReadUvExposure(pStartTime, pEndTime);
+        } else {
+            PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"TYPE\":\"ERROR\",\"MESSAGE\":\"Health data type not recognized: "+hcHDT+" \"}");
+            pluginResult.setKeepCallback(true);
+            callbackContext.sendPluginResult(pluginResult);
+        }
+    }
 
+    public void startReadStepCount(long pStartTime, long pEndTime) {
         // StepCount
         readHealthConstant(
                 pStartTime,
@@ -84,11 +121,17 @@ public class DataReporter {
                         HealthConstants.StepCount.DISTANCE,
                         HealthConstants.StepCount.CALORIE,
                         HealthConstants.StepCount.SPEED,
-                        HealthConstants.StepCount.SAMPLE_POSITION_TYPE
+                        HealthConstants.StepCount.SAMPLE_POSITION_TYPE,
+                        HealthConstants.StepCount.DEVICE_UUID,
+                        HealthConstants.StepCount.UUID,
+                        HealthConstants.StepCount.CREATE_TIME,
+                        HealthConstants.StepCount.UPDATE_TIME
                 },
                 mListenerStepCount
         );
+    }
 
+    public void startReadExercise(long pStartTime, long pEndTime) {
         // Exercise
         readHealthConstant(
                 pStartTime,
@@ -128,7 +171,9 @@ public class DataReporter {
                 },
                 mListenerExercise
         );
+    }
 
+    public void startReadSleep(long pStartTime, long pEndTime) {
         // Sleep
         readHealthConstant(
                 pStartTime,
@@ -138,11 +183,17 @@ public class DataReporter {
                 new String[] {
                         HealthConstants.Sleep.START_TIME,
                         HealthConstants.Sleep.END_TIME,
-                        HealthConstants.Sleep.TIME_OFFSET
+                        HealthConstants.Sleep.TIME_OFFSET,
+                        HealthConstants.Sleep.DEVICE_UUID,
+                        HealthConstants.Sleep.UUID,
+                        HealthConstants.Sleep.CREATE_TIME,
+                        HealthConstants.Sleep.UPDATE_TIME
                 },
                 mListenerSleep
         );
+    }
 
+    public void startReadSleepStage(long pStartTime, long pEndTime) {
         // SleepStage
         readHealthConstant(
                 pStartTime,
@@ -158,7 +209,10 @@ public class DataReporter {
                 },
                 mListenerSleepStage
         );
+    }
 
+    public void startReadFoodIntake(long pStartTime, long pEndTime) {
+        // FoodIntake
         readHealthConstant(
                 pStartTime,
                 pEndTime,
@@ -176,7 +230,10 @@ public class DataReporter {
                 },
                 mListenerFoodIntake
         );
+    }
 
+    public void startReadWaterIntake(long pStartTime, long pEndTime) {        
+        // WaterIntake
         readHealthConstant(
                 pStartTime,
                 pEndTime,
@@ -190,7 +247,10 @@ public class DataReporter {
                 },
                 mListenerWaterIntake
         );
+    }
 
+    public void startReadCaffeineIntake(long pStartTime, long pEndTime) {   
+        // CaffeineIntake     
         readHealthConstant(
                 pStartTime,
                 pEndTime,
@@ -204,7 +264,10 @@ public class DataReporter {
                 },
                 mListenerCaffeineIntake
         );
+    }
 
+    public void startReadHeartRate(long pStartTime, long pEndTime) { 
+        // HeartRate  
         readHealthConstant(
                 pStartTime,
                 pEndTime,
@@ -219,7 +282,10 @@ public class DataReporter {
                 },
                 mListenerHeartRate
         );
+    }
 
+    public void startReadBodyTemperature(long pStartTime, long pEndTime) { 
+        // BodyTemperature
         readHealthConstant(
                 pStartTime,
                 pEndTime,
@@ -233,7 +299,10 @@ public class DataReporter {
                 mListenerBodyTemperature
 
         );
+    }
 
+    public void startReadBloodPressure(long pStartTime, long pEndTime) { 
+        // BloodPressure
         readHealthConstant(
                 pStartTime,
                 pEndTime,
@@ -249,7 +318,10 @@ public class DataReporter {
                 },
                 mListenerBloodPressure
         );
+    }
 
+    public void startReadBloodGlucose(long pStartTime, long pEndTime) { 
+        // BloodGlucose
         readHealthConstant(
                 pStartTime,
                 pEndTime,
@@ -266,7 +338,10 @@ public class DataReporter {
                 },
                 mListenerBloodGlucose
         );
+    }
 
+    public void startReadOxygenSaturation(long pStartTime, long pEndTime) { 
+        // OxygenSaturation
         readHealthConstant(
                 pStartTime,
                 pEndTime,
@@ -281,7 +356,10 @@ public class DataReporter {
                 },
                 mListenerOxygenSaturation
         );
+    }
 
+    public void startReadHbA1c(long pStartTime, long pEndTime) { 
+        // HbA1c
         readHealthConstant(
                 pStartTime,
                 pEndTime,
@@ -294,7 +372,10 @@ public class DataReporter {
                 },
                 mListenerHbA1c
         );
+    }
 
+    public void startReadAmbientTemperature(long pStartTime, long pEndTime) { 
+        // AmbientTemperature
         readHealthConstant(
                 pStartTime,
                 pEndTime,
@@ -312,7 +393,10 @@ public class DataReporter {
                 },
                 mListenerAmbientTemperature
         );
+    }
 
+    public void startReadUvExposure(long pStartTime, long pEndTime) { 
+        // UvExposure
         readHealthConstant(
                 pStartTime,
                 pEndTime,
@@ -382,7 +466,11 @@ public class DataReporter {
                                 add("DISTANCE", c.getFloat(c.getColumnIndex(HealthConstants.StepCount.DISTANCE))).
                                 add("CALORIE", c.getFloat(c.getColumnIndex(HealthConstants.StepCount.CALORIE))).
                                 add("SPEED", c.getFloat(c.getColumnIndex(HealthConstants.StepCount.SPEED))).
-                                add("SAMPLE_POSITION_TYPE", c.getInt(c.getColumnIndex(HealthConstants.StepCount.SAMPLE_POSITION_TYPE)))
+                                add("SAMPLE_POSITION_TYPE", c.getInt(c.getColumnIndex(HealthConstants.StepCount.SAMPLE_POSITION_TYPE))).
+                                add("DEVICE_UUID", c.getLong(c.getColumnIndex(HealthConstants.StepCount.DEVICE_UUID))).
+                                add("UUID", c.getLong(c.getColumnIndex(HealthConstants.StepCount.UUID))).
+                                add("CREATE_TIME", c.getLong(c.getColumnIndex(HealthConstants.StepCount.CREATE_TIME))).
+                                add("UPDATE_TIME", c.getLong(c.getColumnIndex(HealthConstants.StepCount.UPDATE_TIME)))
                         );
 
                     }
@@ -483,7 +571,11 @@ public class DataReporter {
                                 add("TYPE", "Sleep").
                                 add("START_TIME", c.getLong(c.getColumnIndex(HealthConstants.Sleep.START_TIME))).
                                 add("END_TIME", c.getLong(c.getColumnIndex(HealthConstants.Sleep.END_TIME))).
-                                add("TIME_OFFSET", c.getLong(c.getColumnIndex(HealthConstants.Sleep.TIME_OFFSET)))
+                                add("TIME_OFFSET", c.getLong(c.getColumnIndex(HealthConstants.Sleep.TIME_OFFSET))).
+                                add("DEVICE_UUID", c.getLong(c.getColumnIndex(HealthConstants.Sleep.DEVICE_UUID))).
+                                add("UUID", c.getLong(c.getColumnIndex(HealthConstants.Sleep.UUID))).
+                                add("CREATE_TIME", c.getLong(c.getColumnIndex(HealthConstants.Sleep.CREATE_TIME))).
+                                add("UPDATE_TIME", c.getLong(c.getColumnIndex(HealthConstants.Sleep.UPDATE_TIME)))
                         );
                     }
                 }

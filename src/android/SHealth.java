@@ -65,13 +65,23 @@ public class SHealth extends CordovaPlugin {
 
             return true;
 
-        } else if (action.equals("getDataFromSHealth")) {
-            Log.d(APP_TAG, "getDataFromSHealth");
+        } else if (action.equals("getSleepData")) {
+            Log.d(APP_TAG, "getSleepData");
 
             JSONArray params = data.getJSONArray(0);
             Log.d(APP_TAG, "StartTime: " + params.getLong(0) + " - EndTime: " + params.getLong(1));
 
-            connector.startReporter(params.getLong(0), params.getLong(1));
+            connector.startReporter(HealthConstants.Sleep.HEALTH_DATA_TYPE, params.getLong(0), params.getLong(1));
+
+            return true;
+
+        } else if (action.equals("getStepCountData")) {
+            Log.d(APP_TAG, "getStepCountData");
+
+            JSONArray params = data.getJSONArray(0);
+            Log.d(APP_TAG, "StartTime: " + params.getLong(0) + " - EndTime: " + params.getLong(1));
+
+            connector.startReporter(HealthConstants.StepCount.HEALTH_DATA_TYPE, params.getLong(0), params.getLong(1));
 
             return true;
 

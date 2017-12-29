@@ -10,7 +10,10 @@ module.exports = {
     callHealthPermissionManager: function (name, successCallback, errorCallback) {
         cordova.exec(successCallback, errorCallback, "SHealth", "callHealthPermissionManager", [name]);
     },
-    getDataFromSHealth: function (name, successCallback, errorCallback) {
-        cordova.exec(successCallback, errorCallback, "SHealth", "getDataFromSHealth", [name]);
+    getSleepData: function (name, successCallback, errorCallback) {
+        cordova.exec(successCallback, errorCallback, "SHealth", "getSleepData", [name]);
+    },
+    getStepCountData: function (name, successCallback, errorCallback) {
+        cordova.exec(successCallback, errorCallback, "SHealth", "getStepCountData", [name]);
     }
 };

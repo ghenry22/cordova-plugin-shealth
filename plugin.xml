@@ -22,16 +22,23 @@
         <param name="android-package" value="com.wopo.plugin.SHealth"/>
       </feature>
     </config-file>
-	<lib-file
-		src="src/android/libs/samsung-digital-health-healthdata-1.2.1.jar"
-		target-dir="libs/"
-		arch="device"
-	/>
-	<lib-file
-		src="src/android/libs/javax.json-1.0.4.jar"
-		target-dir="libs/"
-		arch="device"
-	/>
+    <config-file target="AndroidManifest.xml" parent="/*/application">
+        <meta-data android:name="com.samsung.cordova.health" android:value="true" />
+        <meta-data android:name="com.samsung.android.health.permission.read" android:value="com.samsung.health.step_count;com.samsung.health.sleep" />
+    </config-file>
+    <config-file target="AndroidManifest.xml" parent="/*">
+        <uses-permission android:name="android.permission.INTERNET" />
+    </config-file>
+    <lib-file
+      src="src/android/libs/samsung-digital-health-healthdata-1.2.1.jar"
+      target-dir="libs/"
+      arch="device"
+    />
+    <lib-file
+      src="src/android/libs/javax.json-1.0.4.jar"
+      target-dir="libs/"
+      arch="device"
+    />
 
     <source-file src="src/android/SHealth.java" target-dir="src/com/wopo/plugin/"/>
     <source-file src="src/android/SHealthConnector.java" target-dir="src/com/wopo/plugin/"/>
