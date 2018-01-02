@@ -62,6 +62,12 @@ public class DataReporter {
         this.callbackContext = pCallbackContext;
     }
 
+    /** Set callback context
+     */
+     public void setCallbackContext(CallbackContext pCallbackContext) {
+         this.callbackContext = pCallbackContext;
+     }
+
     /** Initiates the database query
      *
      * @param pStartTime    Earliest time of measurement

@@ -61,6 +61,7 @@ public class SHealth extends CordovaPlugin {
         } else if (action.equals("callHealthPermissionManager")) {
             Log.d(APP_TAG, "callHealthPermissionManager");
 
+            connector.setCallbackContext(callbackContext);
             connector.callHealthPermissionManager();
 
             return true;
@@ -71,6 +72,7 @@ public class SHealth extends CordovaPlugin {
             JSONArray params = data.getJSONArray(0);
             Log.d(APP_TAG, "StartTime: " + params.getLong(0) + " - EndTime: " + params.getLong(1));
 
+            connector.setCallbackContext(callbackContext);
             connector.startReporter(HealthConstants.Sleep.HEALTH_DATA_TYPE, params.getLong(0), params.getLong(1));
 
             return true;
@@ -81,12 +83,15 @@ public class SHealth extends CordovaPlugin {
             JSONArray params = data.getJSONArray(0);
             Log.d(APP_TAG, "StartTime: " + params.getLong(0) + " - EndTime: " + params.getLong(1));
 
+            connector.setCallbackContext(callbackContext);
             connector.startReporter(HealthConstants.StepCount.HEALTH_DATA_TYPE, params.getLong(0), params.getLong(1));
 
             return true;
 
         } else {
-
+            PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"TYPE\":\"ERROR\",\"MESSAGE\":\"Action not found.\"}");
+            pluginResult.setKeepCallback(true);
+            callbackContext.sendPluginResult(pluginResult);
             return false;
 
         }

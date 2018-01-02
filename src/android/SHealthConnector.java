@@ -62,6 +62,15 @@ public class SHealthConnector {
         // mKeySet.add(new PermissionKey(HealthConstants.UvExposure.HEALTH_DATA_TYPE, PermissionType.READ));
     }
 
+    /** Set callback context
+     */
+     public void setCallbackContext(CallbackContext pCallbackContext) {
+         this.callbackContext = pCallbackContext;
+         if(mReporter != null){
+             mReporter.setCallbackContext(pCallbackContext);
+         }
+     }
+
     /** Connects the plugin to S Health
      *
      */
@@ -139,15 +148,26 @@ public class SHealthConnector {
                     // Request the permission for reading step counts if it is not acquired
                     pmsManager.requestPermissions(mKeySet, activity);
                 }
+
+                PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"TYPE\":\"SUCCESS\",\"MESSAGE\":\"Health data service is connected.\"}");
+                pluginResult.setKeepCallback(true);
+                callbackContext.sendPluginResult(pluginResult);
             } catch (Exception e) {
                 Log.e(APP_TAG, e.getClass().getName() + " - " + e.getMessage());
                 Log.e(APP_TAG, "Permission setting fails.");
+
+                PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"TYPE\":\"ERROR\",\"MESSAGE\":\"Permission setting fails.\"}");
+                pluginResult.setKeepCallback(true);
+                callbackContext.sendPluginResult(pluginResult);
             }
         }
 
         @Override
         public void onConnectionFailed(HealthConnectionErrorResult error) {
             Log.d(APP_TAG, "Health data service is not available.");
+            PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"TYPE\":\"ERROR\",\"MESSAGE\":\"Health data service is not available.\"}");
+            pluginResult.setKeepCallback(true);
+            callbackContext.sendPluginResult(pluginResult);
         }
 
         @Override
