@@ -15,5 +15,8 @@ module.exports = {
     },
     getStepCountData: function (name, successCallback, errorCallback) {
         cordova.exec(successCallback, errorCallback, "SHealth", "getStepCountData", [name]);
+    },
+    getStepCountTrendData: function (name, successCallback, errorCallback) {
+        cordova.exec(successCallback, errorCallback, "SHealth", "getStepCountTrendData", [name]);
     }
 };

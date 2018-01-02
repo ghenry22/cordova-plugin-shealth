@@ -105,6 +105,8 @@ public class DataReporter {
             startReadAmbientTemperature(pStartTime, pEndTime);
         } else if (hcHDT.equals(HealthConstants.UvExposure.HEALTH_DATA_TYPE)) {
             startReadUvExposure(pStartTime, pEndTime);
+        } else if (hcHDT.equals("com.samsung.shealth.step_daily_trend")) {
+            startReadStepCountTrend(pStartTime, pEndTime);
         } else {
             PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"TYPE\":\"ERROR\",\"MESSAGE\":\"Health data type not recognized: "+hcHDT+" \"}");
             pluginResult.setKeepCallback(true);
@@ -134,6 +136,32 @@ public class DataReporter {
                         HealthConstants.StepCount.UPDATE_TIME
                 },
                 mListenerStepCount
+        );
+    }
+
+    public void startReadStepCountTrend(long pStartTime, long pEndTime) {
+
+        Filter filter1 = Filter.and(Filter.greaterThanEquals("day_time", pStartTime),
+                Filter.lessThanEquals("day_time", pEndTime));
+        Filter filter = Filter.and(filter1, Filter.eq("source_type", -2));        
+
+        // StepCount
+        readHealthConstantWithFilter(
+                filter,
+                "com.samsung.shealth.step_daily_trend",
+                new String[] {
+                        "datauuid",
+                        "create_time",
+                        "update_time",
+                        "deviceuuid",
+                        "day_time",
+                        "count",
+                        "calorie",
+                        "distance",
+                        "source_type",
+                        "speed"
+                },
+                mListenerStepCountTrend
         );
     }
 
@@ -449,6 +477,29 @@ public class DataReporter {
         }
     }
 
+    /** Starts the database query for a specific {@link HealthConstants}
+     *
+     * @param filter        Filter that is used in query
+     * @param hcHDT
+     * @param hcString      Array of requestet attributes
+     * @param pmListener    Callback function for results
+     */
+    private void readHealthConstantWithFilter(Filter filter, String hcHDT, String[] hcString, HealthResultHolder.ResultListener<ReadResult> pmListener) {
+        HealthDataResolver resolver = new HealthDataResolver(mStore, null);
+
+        HealthDataResolver.ReadRequest request = new ReadRequest.Builder()
+                .setDataType(hcHDT)
+                .setProperties(hcString)
+                .setFilter(filter)
+                .build();
+
+        try {
+            resolver.read(request).setResultListener(pmListener);
+        } catch (Exception e) {
+            Log.e(APP_TAG, e.getClass().getName() + " - " + e.getMessage());
+        }
+    }
+
     /** Callback for  {@link HealthConstants.StepCount}
      *
      */
@@ -477,6 +528,60 @@ public class DataReporter {
                                 add("UUID", c.getLong(c.getColumnIndex(HealthConstants.StepCount.UUID))).
                                 add("CREATE_TIME", c.getLong(c.getColumnIndex(HealthConstants.StepCount.CREATE_TIME))).
                                 add("UPDATE_TIME", c.getLong(c.getColumnIndex(HealthConstants.StepCount.UPDATE_TIME)))
+                        );
+
+                    }
+                }
+
+            } finally {
+                if (c != null) {
+                    c.close();
+                }
+            }
+
+            JsonArray jsonarr = array.build();
+            Log.d(APP_TAG, jsonarr.toString());
+
+            PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonarr.toString());
+            pluginResult.setKeepCallback(true);
+            callbackContext.sendPluginResult(pluginResult);
+        }
+    };
+
+    /** Callback for  {@link com.samsung.shealth.step_daily_trend}
+     *
+     */
+    private final HealthResultHolder.ResultListener<ReadResult> mListenerStepCountTrend = new HealthResultHolder.ResultListener<ReadResult>() {
+        @Override
+        public void onResult(ReadResult result) {
+            Cursor c = null;
+            JsonArrayBuilder array = Json.createArrayBuilder();
+
+            try {
+                c = result.getResultCursor();
+
+                if (c != null) {
+                    long addMS = (24*3600 - 1) * 1000;
+                    while (c.moveToNext()) {
+                        long day_time = c.getLong(c.getColumnIndex("day_time"));
+                        // get date at time 23:59:59
+                        // day_time + (23*3600 + 59*60 + 59) * 1000
+                        long end_time = day_time + addMS;
+                        
+                        array.add(Json.createObjectBuilder().
+                                add("TYPE", "StepCountTrend").
+                                add("START_TIME", day_time).
+                                add("END_TIME", end_time).
+                                add("TIME_OFFSET", 0).
+                                add("COUNT", c.getInt(c.getColumnIndex("count"))).
+                                add("DISTANCE", c.getFloat(c.getColumnIndex("distance"))).
+                                add("CALORIE", c.getFloat(c.getColumnIndex("calorie"))).
+                                add("SPEED", c.getFloat(c.getColumnIndex("speed"))).
+                                add("SAMPLE_POSITION_TYPE", 0).
+                                add("DEVICE_UUID", c.getLong(c.getColumnIndex("deviceuuid"))).
+                                add("UUID", c.getLong(c.getColumnIndex("datauuid"))).
+                                add("CREATE_TIME", c.getLong(c.getColumnIndex("create_time"))).
+                                add("UPDATE_TIME", c.getLong(c.getColumnIndex("update_time")))
                         );
 
                     }
