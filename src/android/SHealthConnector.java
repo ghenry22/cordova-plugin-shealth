@@ -34,6 +34,7 @@ public class SHealthConnector {
 
     Activity activity;
     CallbackContext callbackContext;
+    CallbackContext observerCallbackContext;
 
     /** Default Constructor.
      *
@@ -69,6 +70,15 @@ public class SHealthConnector {
          this.callbackContext = pCallbackContext;
          if(mReporter != null){
              mReporter.setCallbackContext(pCallbackContext);
+         }
+     }
+
+     /** Set callback context for observer
+     */
+     public void setObserverCallbackContext(CallbackContext pCallbackContext) {
+         this.observerCallbackContext = pCallbackContext;
+         if(mReporter != null){
+             mReporter.setObserverCallbackContext(pCallbackContext);
          }
      }
 
@@ -127,6 +137,22 @@ public class SHealthConnector {
             PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"TYPE\":\"ERROR\",\"MESSAGE\":\"Not successfully connected with SHealth\"}");
             pluginResult.setKeepCallback(true);
             callbackContext.sendPluginResult(pluginResult);
+        }
+    }
+
+    /** Start observer
+     */
+    public void startObserver(String healthDataType) {
+        if(mReporter != null){
+            mReporter.startObserver(healthDataType);
+        } else {
+            Log.e(APP_TAG, "mReporter == null");
+
+            PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"TYPE\":\"ERROR\",\"MESSAGE\":\"Not successfully connected with SHealth\"}");
+            pluginResult.setKeepCallback(true);
+            if (observerCallbackContext != null) {
+                observerCallbackContext.sendPluginResult(pluginResult);
+            }
         }
     }
 
