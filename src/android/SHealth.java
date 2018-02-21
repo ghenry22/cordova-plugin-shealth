@@ -106,6 +106,27 @@ public class SHealth extends CordovaPlugin {
                 connector.startObserver(params.getString(i));
             }
             return true;
+        } else if (action.equals("checkPermission")) {
+            Log.d(APP_TAG, "checkPermission");
+
+            connector.setCallbackContext(callbackContext);
+            connector.checkPermissionHasBeenAcquired();
+
+            return true;
+        } else if (action.equals("stopObserver")) {
+            Log.d(APP_TAG, "stopObserver");
+
+            connector.setCallbackContext(callbackContext);
+            connector.stopObserver();
+
+            return true;
+        } else if (action.equals("disconnect")) {
+            Log.d(APP_TAG, "disconnect");
+
+            connector.setCallbackContext(callbackContext);
+            connector.disconnectService();
+
+            return true;
         } else {
             PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"TYPE\":\"ERROR\",\"MESSAGE\":\"Action not found.\"}");
             pluginResult.setKeepCallback(true);

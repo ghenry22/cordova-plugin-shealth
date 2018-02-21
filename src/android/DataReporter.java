@@ -48,6 +48,7 @@ public class DataReporter {
     Activity activity;
     CallbackContext callbackContext;
     CallbackContext observerCallbackContext;
+    boolean isObserverAdded = false;
 
     String APP_TAG = "CordovaSHealthPlugin";
 
@@ -93,7 +94,18 @@ public class DataReporter {
      * @param healthDataType    valid Health Data Type
      */
      public void startObserver(String healthDataType) {
+         if (isObserverAdded) return;
          HealthDataObserver.addObserver(mStore,healthDataType,mObserver);
+         isObserverAdded = true;
+     }
+
+    /** Remove registered observer
+     */
+     public void removeObserver() {
+         if (isObserverAdded) {
+            HealthDataObserver.removeObserver(mStore,mObserver);
+            isObserverAdded = false;
+         }
      }
 
     /** Initiates the database query

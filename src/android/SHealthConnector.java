@@ -123,6 +123,31 @@ public class SHealthConnector {
         }
     }
 
+    public void checkPermissionHasBeenAcquired() {
+        HealthPermissionManager pmsManager = new HealthPermissionManager(mStore);
+        try {
+            // Check whether the permissions that this application needs are acquired
+            Map<PermissionKey, Boolean> resultMap = pmsManager.isPermissionAcquired(mKeySet);
+
+            if (resultMap.containsValue(Boolean.FALSE)) {
+                PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"TYPE\":\"ERROR\",\"MESSAGE\":\"Permission has not been acquired.\"}");
+                pluginResult.setKeepCallback(true);
+                callbackContext.sendPluginResult(pluginResult);
+            } else {
+                PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"TYPE\":\"SUCCESS\",\"MESSAGE\":\"Permission has been acquired.\"}");
+                pluginResult.setKeepCallback(true);
+                callbackContext.sendPluginResult(pluginResult);
+            }
+        } catch (Exception e) {
+            Log.e(APP_TAG, e.getClass().getName() + " - " + e.getMessage());
+            Log.e(APP_TAG, "Permission check fails.");
+
+            PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"TYPE\":\"ERROR\",\"MESSAGE\":\"Not successfully connected with SHealth\"}");
+            pluginResult.setKeepCallback(true);
+            callbackContext.sendPluginResult(pluginResult);
+        }
+    }
+
     /** Starts the database query for S Health
      *
      * @param startTime     Earliest time of measurement
@@ -154,6 +179,31 @@ public class SHealthConnector {
                 observerCallbackContext.sendPluginResult(pluginResult);
             }
         }
+    }
+
+    /** Stop the observer
+     */
+    public void stopObserver() {
+        if(mReporter != null){
+            mReporter.removeObserver();
+        } else {
+            Log.e(APP_TAG, "mReporter == null");
+        }
+
+        PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"TYPE\":\"SUCCESS\",\"MESSAGE\":\"Observer has been stopped.\"}");
+        pluginResult.setKeepCallback(true);
+        callbackContext.sendPluginResult(pluginResult);
+    }
+
+    /** Disconnect health store service
+     */
+    public void disconnectService() {
+        if (mStore != null) {
+            mStore.disconnectService();
+        }
+        PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"TYPE\":\"SUCCESS\",\"MESSAGE\":\"Health Store service has been disconnected.\"}");
+        pluginResult.setKeepCallback(true);
+        callbackContext.sendPluginResult(pluginResult);
     }
 
     /** Callback object for {@link HealthDataStore}

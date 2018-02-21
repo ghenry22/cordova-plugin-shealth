@@ -21,5 +21,14 @@ module.exports = {
     },
     startObserver: function(dataTypes, successCallback, errorCallback) {
         cordova.exec(successCallback, errorCallback, "SHealth", "startObserver", [dataTypes]);
+    },
+    checkPermission: function(name, successCallback, errorCallback) {
+        cordova.exec(successCallback, errorCallback, "SHealth", "checkPermission", [name]);
+    },
+    stopObserver: function(name, successCallback, errorCallback) {
+        cordova.exec(successCallback, errorCallback, "SHealth", "stopObserver", [name]);
+    },
+    disconnect: function(name, successCallback, errorCallback) {
+        cordova.exec(successCallback, errorCallback, "SHealth", "disconnect", [name]);
     }
 };
