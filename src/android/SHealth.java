@@ -97,6 +97,15 @@ public class SHealth extends CordovaPlugin {
             connector.startReporter("com.samsung.shealth.step_daily_trend", params.getLong(0), params.getLong(1));
 
             return true;
+        } else if (action.equals("startObserver")) {
+            Log.d(APP_TAG, "startObserver");
+
+            JSONArray params = data.getJSONArray(0);
+            connector.setObserverCallbackContext(callbackContext);
+            for (int i = 0; i < params.length(); i++) {
+                connector.startObserver(params.getString(i));
+            }
+            return true;
         } else {
             PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"TYPE\":\"ERROR\",\"MESSAGE\":\"Action not found.\"}");
             pluginResult.setKeepCallback(true);

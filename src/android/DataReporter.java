@@ -47,8 +47,23 @@ public class DataReporter {
 
     Activity activity;
     CallbackContext callbackContext;
+    CallbackContext observerCallbackContext;
 
     String APP_TAG = "CordovaSHealthPlugin";
+
+    private final HealthDataObserver mObserver = new HealthDataObserver(null) {
+
+         // Checks notification for changed health data
+         @Override
+         public void onChange(String dataTypeName) {
+            Log.d(APP_TAG, "Health data is changed: " + dataTypeName);
+            if (observerCallbackContext != null) {
+                PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, dataTypeName);
+                pluginResult.setKeepCallback(true);
+                observerCallbackContext.sendPluginResult(pluginResult);
+            }
+         }
+     };
 
     /** Default Constructor.
      *
@@ -66,6 +81,19 @@ public class DataReporter {
      */
      public void setCallbackContext(CallbackContext pCallbackContext) {
          this.callbackContext = pCallbackContext;
+     }
+
+    /** Set callback context for observer
+     */
+     public void setObserverCallbackContext(CallbackContext pCallbackContext) {
+         this.observerCallbackContext = pCallbackContext;
+     }
+
+    /** Start observer to listen any data changed
+     * @param healthDataType    valid Health Data Type
+     */
+     public void startObserver(String healthDataType) {
+         HealthDataObserver.addObserver(mStore,healthDataType,mObserver);
      }
 
     /** Initiates the database query

@@ -34,6 +34,7 @@ public class SHealthConnector {
 
     Activity activity;
     CallbackContext callbackContext;
+    CallbackContext observerCallbackContext;
 
     /** Default Constructor.
      *
@@ -48,7 +49,7 @@ public class SHealthConnector {
         mKeySet.add(new PermissionKey(HealthConstants.StepCount.HEALTH_DATA_TYPE, PermissionType.READ));
         // mKeySet.add(new PermissionKey(HealthConstants.Exercise.HEALTH_DATA_TYPE, PermissionType.READ));
         mKeySet.add(new PermissionKey(HealthConstants.Sleep.HEALTH_DATA_TYPE, PermissionType.READ));
-        mKeySet.add(new PermissionKey("com.samsung.shealth.step_daily_trend", PermissionType.READ));
+        // mKeySet.add(new PermissionKey("com.samsung.shealth.step_daily_trend", PermissionType.READ));
         // mKeySet.add(new PermissionKey(HealthConstants.SleepStage.HEALTH_DATA_TYPE, PermissionType.READ));
         // mKeySet.add(new PermissionKey(HealthConstants.FoodIntake.HEALTH_DATA_TYPE, PermissionType.READ));
         // mKeySet.add(new PermissionKey(HealthConstants.WaterIntake.HEALTH_DATA_TYPE, PermissionType.READ));
@@ -69,6 +70,15 @@ public class SHealthConnector {
          this.callbackContext = pCallbackContext;
          if(mReporter != null){
              mReporter.setCallbackContext(pCallbackContext);
+         }
+     }
+
+     /** Set callback context for observer
+     */
+     public void setObserverCallbackContext(CallbackContext pCallbackContext) {
+         this.observerCallbackContext = pCallbackContext;
+         if(mReporter != null){
+             mReporter.setObserverCallbackContext(pCallbackContext);
          }
      }
 
@@ -127,6 +137,22 @@ public class SHealthConnector {
             PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"TYPE\":\"ERROR\",\"MESSAGE\":\"Not successfully connected with SHealth\"}");
             pluginResult.setKeepCallback(true);
             callbackContext.sendPluginResult(pluginResult);
+        }
+    }
+
+    /** Start observer
+     */
+    public void startObserver(String healthDataType) {
+        if(mReporter != null){
+            mReporter.startObserver(healthDataType);
+        } else {
+            Log.e(APP_TAG, "mReporter == null");
+
+            PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"TYPE\":\"ERROR\",\"MESSAGE\":\"Not successfully connected with SHealth\"}");
+            pluginResult.setKeepCallback(true);
+            if (observerCallbackContext != null) {
+                observerCallbackContext.sendPluginResult(pluginResult);
+            }
         }
     }
 
