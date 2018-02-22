@@ -46,7 +46,7 @@ public class SHealth extends CordovaPlugin {
             String message = "{\"TYPE\":\"MESSAGE\",\"MESSAGE\":\"Hello, " + name + " this is a cordova shealth plugin!\"}";
 
             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, message);
-            pluginResult.setKeepCallback(true);
+            // pluginResult.setKeepCallback(true);
             callbackContext.sendPluginResult(pluginResult);
 
             return true;

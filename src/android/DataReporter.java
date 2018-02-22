@@ -94,7 +94,6 @@ public class DataReporter {
      * @param healthDataType    valid Health Data Type
      */
      public void startObserver(String healthDataType) {
-         if (isObserverAdded) return;
          HealthDataObserver.addObserver(mStore,healthDataType,mObserver);
          isObserverAdded = true;
      }
@@ -104,6 +103,7 @@ public class DataReporter {
      public void removeObserver() {
          if (isObserverAdded) {
             HealthDataObserver.removeObserver(mStore,mObserver);
+            observerCallbackContext = null;
             isObserverAdded = false;
          }
      }
@@ -149,7 +149,7 @@ public class DataReporter {
             startReadStepCountTrend(pStartTime, pEndTime);
         } else {
             PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"TYPE\":\"ERROR\",\"MESSAGE\":\"Health data type not recognized: "+hcHDT+" \"}");
-            pluginResult.setKeepCallback(true);
+            //pluginResult.setKeepCallback(true);
             callbackContext.sendPluginResult(pluginResult);
         }
     }
@@ -182,7 +182,7 @@ public class DataReporter {
     public void startReadStepCountTrend(long pStartTime, long pEndTime) {
 
         Filter filter1 = Filter.and(Filter.greaterThanEquals("day_time", pStartTime),
-                Filter.lessThanEquals("day_time", pEndTime));
+                Filter.lessThan("day_time", pEndTime));
         Filter filter = Filter.and(filter1, Filter.eq("source_type", -2));        
 
         // StepCount
@@ -502,7 +502,7 @@ public class DataReporter {
         HealthDataResolver resolver = new HealthDataResolver(mStore, null);
 
         Filter filter = Filter.and(Filter.greaterThanEquals(hcStartTime, pStatTime),
-                Filter.lessThanEquals(hcStartTime, pEndTime));
+                Filter.lessThan(hcStartTime, pEndTime));
 
         HealthDataResolver.ReadRequest request = new ReadRequest.Builder()
                 .setDataType(hcHDT)
@@ -583,7 +583,7 @@ public class DataReporter {
             Log.d(APP_TAG, jsonarr.toString());
 
             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonarr.toString());
-            pluginResult.setKeepCallback(true);
+            //pluginResult.setKeepCallback(true);
             callbackContext.sendPluginResult(pluginResult);
         }
     };
@@ -637,7 +637,7 @@ public class DataReporter {
             Log.d(APP_TAG, jsonarr.toString());
 
             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonarr.toString());
-            pluginResult.setKeepCallback(true);
+            //pluginResult.setKeepCallback(true);
             callbackContext.sendPluginResult(pluginResult);
         }
     };
@@ -699,7 +699,7 @@ public class DataReporter {
             Log.d(APP_TAG, jsonarr.toString());
 
             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonarr.toString());
-            pluginResult.setKeepCallback(true);
+            //pluginResult.setKeepCallback(true);
             callbackContext.sendPluginResult(pluginResult);
         }
     };
@@ -740,7 +740,7 @@ public class DataReporter {
             Log.d(APP_TAG, jsonarr.toString());
 
             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonarr.toString());
-            pluginResult.setKeepCallback(true);
+            //pluginResult.setKeepCallback(true);
             callbackContext.sendPluginResult(pluginResult);
         }
     };
@@ -779,7 +779,7 @@ public class DataReporter {
             Log.d(APP_TAG, jsonarr.toString());
 
             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonarr.toString());
-            pluginResult.setKeepCallback(true);
+            //pluginResult.setKeepCallback(true);
             callbackContext.sendPluginResult(pluginResult);
         }
     };
@@ -821,7 +821,7 @@ public class DataReporter {
             Log.d(APP_TAG, jsonarr.toString());
 
             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonarr.toString());
-            pluginResult.setKeepCallback(true);
+            //pluginResult.setKeepCallback(true);
             callbackContext.sendPluginResult(pluginResult);
         }
     };
@@ -859,7 +859,7 @@ public class DataReporter {
             Log.d(APP_TAG, jsonarr.toString());
 
             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonarr.toString());
-            pluginResult.setKeepCallback(true);
+            //pluginResult.setKeepCallback(true);
             callbackContext.sendPluginResult(pluginResult);
         }
     };
@@ -897,7 +897,7 @@ public class DataReporter {
             Log.d(APP_TAG, jsonarr.toString());
 
             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonarr.toString());
-            pluginResult.setKeepCallback(true);
+            //pluginResult.setKeepCallback(true);
             callbackContext.sendPluginResult(pluginResult);
         }
     };
@@ -936,7 +936,7 @@ public class DataReporter {
             Log.d(APP_TAG, jsonarr.toString());
 
             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonarr.toString());
-            pluginResult.setKeepCallback(true);
+            //pluginResult.setKeepCallback(true);
             callbackContext.sendPluginResult(pluginResult);
         }
     };
@@ -973,7 +973,7 @@ public class DataReporter {
             Log.d(APP_TAG, jsonarr.toString());
 
             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonarr.toString());
-            pluginResult.setKeepCallback(true);
+            //pluginResult.setKeepCallback(true);
             callbackContext.sendPluginResult(pluginResult);
         }
     };
@@ -1013,7 +1013,7 @@ public class DataReporter {
             Log.d(APP_TAG, jsonarr.toString());
 
             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonarr.toString());
-            pluginResult.setKeepCallback(true);
+            //pluginResult.setKeepCallback(true);
             callbackContext.sendPluginResult(pluginResult);
         }
     };
@@ -1054,7 +1054,7 @@ public class DataReporter {
             Log.d(APP_TAG, jsonarr.toString());
 
             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonarr.toString());
-            pluginResult.setKeepCallback(true);
+            //pluginResult.setKeepCallback(true);
             callbackContext.sendPluginResult(pluginResult);
         }
     };
@@ -1093,7 +1093,7 @@ public class DataReporter {
             Log.d(APP_TAG, jsonarr.toString());
 
             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonarr.toString());
-            pluginResult.setKeepCallback(true);
+            //pluginResult.setKeepCallback(true);
             callbackContext.sendPluginResult(pluginResult);
         }
     };
@@ -1130,7 +1130,7 @@ public class DataReporter {
             Log.d(APP_TAG, jsonarr.toString());
 
             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonarr.toString());
-            pluginResult.setKeepCallback(true);
+            //pluginResult.setKeepCallback(true);
             callbackContext.sendPluginResult(pluginResult);
         }
     };
@@ -1172,7 +1172,7 @@ public class DataReporter {
             Log.d(APP_TAG, jsonarr.toString());
 
             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonarr.toString());
-            pluginResult.setKeepCallback(true);
+            //pluginResult.setKeepCallback(true);
             callbackContext.sendPluginResult(pluginResult);
         }
     };
@@ -1213,7 +1213,7 @@ public class DataReporter {
             Log.d(APP_TAG, jsonarr.toString());
 
             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, jsonarr.toString());
-            pluginResult.setKeepCallback(true);
+            //pluginResult.setKeepCallback(true);
             callbackContext.sendPluginResult(pluginResult);
         }
     };

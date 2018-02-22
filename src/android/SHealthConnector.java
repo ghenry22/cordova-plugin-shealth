@@ -95,7 +95,7 @@ public class SHealthConnector {
             e.printStackTrace();
 
             PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"TYPE\":\"ERROR\",\"MESSAGE\":\"Could not successfully connect with SHealth\"}");
-            pluginResult.setKeepCallback(true);
+            //pluginResult.setKeepCallback(true);
             callbackContext.sendPluginResult(pluginResult);
         }
 
@@ -105,6 +105,27 @@ public class SHealthConnector {
         mStore.connectService();
     }
 
+    /** Callback for callHealthPermissionManager
+     *
+     */
+    private final HealthResultHolder.ResultListener<PermissionResult> mRequestPermissionCallback = new HealthResultHolder.ResultListener<PermissionResult>() {
+        @Override
+        public void onResult(PermissionResult result) {
+            Log.d(APP_TAG, "Permission callback is received.");
+            Map<PermissionKey, Boolean> resultMap = result.getResultMap();
+
+            if (resultMap.containsValue(Boolean.FALSE)) {
+                PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"TYPE\":\"ERROR\",\"MESSAGE\":\"Permission has not been acquired.\"}");
+                //pluginResult.setKeepCallback(true);
+                callbackContext.sendPluginResult(pluginResult);
+            } else {
+                PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"TYPE\":\"SUCCESS\",\"MESSAGE\":\"Permission has been acquired.\"}");
+                //pluginResult.setKeepCallback(true);
+                callbackContext.sendPluginResult(pluginResult);
+            }
+        }
+    };
+
     /** Opens the permission manager for S Health
      *
      */
@@ -112,13 +133,13 @@ public class SHealthConnector {
         HealthPermissionManager pmsManager = new HealthPermissionManager(mStore);
         try {
             // Show user permission UI for allowing user to change options
-            pmsManager.requestPermissions(mKeySet, activity);
+            pmsManager.requestPermissions(mKeySet, activity).setResultListener(mRequestPermissionCallback);
         } catch (Exception e) {
             Log.e(APP_TAG, e.getClass().getName() + " - " + e.getMessage());
             Log.e(APP_TAG, "Permission setting fails.");
 
             PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"TYPE\":\"ERROR\",\"MESSAGE\":\"Not successfully connected with SHealth\"}");
-            pluginResult.setKeepCallback(true);
+            //pluginResult.setKeepCallback(true);
             callbackContext.sendPluginResult(pluginResult);
         }
     }
@@ -131,11 +152,11 @@ public class SHealthConnector {
 
             if (resultMap.containsValue(Boolean.FALSE)) {
                 PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"TYPE\":\"ERROR\",\"MESSAGE\":\"Permission has not been acquired.\"}");
-                pluginResult.setKeepCallback(true);
+                //pluginResult.setKeepCallback(true);
                 callbackContext.sendPluginResult(pluginResult);
             } else {
                 PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"TYPE\":\"SUCCESS\",\"MESSAGE\":\"Permission has been acquired.\"}");
-                pluginResult.setKeepCallback(true);
+                //pluginResult.setKeepCallback(true);
                 callbackContext.sendPluginResult(pluginResult);
             }
         } catch (Exception e) {
@@ -143,7 +164,7 @@ public class SHealthConnector {
             Log.e(APP_TAG, "Permission check fails.");
 
             PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"TYPE\":\"ERROR\",\"MESSAGE\":\"Not successfully connected with SHealth\"}");
-            pluginResult.setKeepCallback(true);
+            //pluginResult.setKeepCallback(true);
             callbackContext.sendPluginResult(pluginResult);
         }
     }
@@ -160,7 +181,7 @@ public class SHealthConnector {
             Log.e(APP_TAG, "mReporter == null");
 
             PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"TYPE\":\"ERROR\",\"MESSAGE\":\"Not successfully connected with SHealth\"}");
-            pluginResult.setKeepCallback(true);
+            //pluginResult.setKeepCallback(true);
             callbackContext.sendPluginResult(pluginResult);
         }
     }
@@ -174,7 +195,7 @@ public class SHealthConnector {
             Log.e(APP_TAG, "mReporter == null");
 
             PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"TYPE\":\"ERROR\",\"MESSAGE\":\"Not successfully connected with SHealth\"}");
-            pluginResult.setKeepCallback(true);
+            //pluginResult.setKeepCallback(true);
             if (observerCallbackContext != null) {
                 observerCallbackContext.sendPluginResult(pluginResult);
             }
@@ -191,7 +212,7 @@ public class SHealthConnector {
         }
 
         PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"TYPE\":\"SUCCESS\",\"MESSAGE\":\"Observer has been stopped.\"}");
-        pluginResult.setKeepCallback(true);
+        //pluginResult.setKeepCallback(true);
         callbackContext.sendPluginResult(pluginResult);
     }
 
@@ -202,7 +223,7 @@ public class SHealthConnector {
             mStore.disconnectService();
         }
         PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"TYPE\":\"SUCCESS\",\"MESSAGE\":\"Health Store service has been disconnected.\"}");
-        pluginResult.setKeepCallback(true);
+        //pluginResult.setKeepCallback(true);
         callbackContext.sendPluginResult(pluginResult);
     }
 
@@ -217,33 +238,16 @@ public class SHealthConnector {
             HealthPermissionManager pmsManager = new HealthPermissionManager(mStore);
             mReporter = new DataReporter(mStore, activity, callbackContext);
 
-            try {
-                // Check whether the permissions that this application needs are acquired
-                Map<PermissionKey, Boolean> resultMap = pmsManager.isPermissionAcquired(mKeySet);
-
-                if (resultMap.containsValue(Boolean.FALSE)) {
-                    // Request the permission for reading step counts if it is not acquired
-                    pmsManager.requestPermissions(mKeySet, activity);
-                }
-
-                PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"TYPE\":\"SUCCESS\",\"MESSAGE\":\"Health data service is connected.\"}");
-                pluginResult.setKeepCallback(true);
-                callbackContext.sendPluginResult(pluginResult);
-            } catch (Exception e) {
-                Log.e(APP_TAG, e.getClass().getName() + " - " + e.getMessage());
-                Log.e(APP_TAG, "Permission setting fails.");
-
-                PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"TYPE\":\"ERROR\",\"MESSAGE\":\"Permission setting fails.\"}");
-                pluginResult.setKeepCallback(true);
-                callbackContext.sendPluginResult(pluginResult);
-            }
+            PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"TYPE\":\"SUCCESS\",\"MESSAGE\":\"Health data service is connected.\"}");
+            //pluginResult.setKeepCallback(true);
+            callbackContext.sendPluginResult(pluginResult);
         }
 
         @Override
         public void onConnectionFailed(HealthConnectionErrorResult error) {
             Log.d(APP_TAG, "Health data service is not available.");
             PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"TYPE\":\"ERROR\",\"MESSAGE\":\"Health data service is not available.\"}");
-            pluginResult.setKeepCallback(true);
+            //pluginResult.setKeepCallback(true);
             callbackContext.sendPluginResult(pluginResult);
         }
 
