@@ -84,17 +84,19 @@ public class DataReporter {
          this.callbackContext = pCallbackContext;
      }
 
-    /** Set callback context for observer
-     */
-     public void setObserverCallbackContext(CallbackContext pCallbackContext) {
-         this.observerCallbackContext = pCallbackContext;
-     }
-
     /** Start observer to listen any data changed
      * @param healthDataType    valid Health Data Type
+     * @param pCallbackContext  callback for observer
      */
-     public void startObserver(String healthDataType) {
-         HealthDataObserver.addObserver(mStore,healthDataType,mObserver);
+     public void startObserver(String[] healthDataTypes, CallbackContext pCallbackContext) {
+         if (isObserverAdded) {
+             removeObserver();
+         }
+         this.observerCallbackContext = pCallbackContext;
+         for (int i = 0; i < healthDataTypes.length; ++i) {
+             HealthDataObserver.addObserver(mStore,healthDataTypes[i],mObserver);
+         }
+         
          isObserverAdded = true;
      }
 

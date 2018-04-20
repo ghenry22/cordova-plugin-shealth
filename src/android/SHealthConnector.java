@@ -77,9 +77,6 @@ public class SHealthConnector {
      */
      public void setObserverCallbackContext(CallbackContext pCallbackContext) {
          this.observerCallbackContext = pCallbackContext;
-         if(mReporter != null){
-             mReporter.setObserverCallbackContext(pCallbackContext);
-         }
      }
 
     /** Connects the plugin to S Health
@@ -188,9 +185,9 @@ public class SHealthConnector {
 
     /** Start observer
      */
-    public void startObserver(String healthDataType) {
+    public void startObserver(String[] healthDataTypes) {
         if(mReporter != null){
-            mReporter.startObserver(healthDataType);
+            mReporter.startObserver(healthDataTypes, this.observerCallbackContext);
         } else {
             Log.e(APP_TAG, "mReporter == null");
 

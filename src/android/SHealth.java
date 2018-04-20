@@ -102,9 +102,11 @@ public class SHealth extends CordovaPlugin {
 
             JSONArray params = data.getJSONArray(0);
             connector.setObserverCallbackContext(callbackContext);
+            String[] types = new String[params.length()];
             for (int i = 0; i < params.length(); i++) {
-                connector.startObserver(params.getString(i));
+                types[i] = params.getString(i);
             }
+            connector.startObserver(types);
             return true;
         } else if (action.equals("checkPermission")) {
             Log.d(APP_TAG, "checkPermission");
