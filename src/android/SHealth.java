@@ -54,6 +54,7 @@ public class SHealth extends CordovaPlugin {
         } else if (action.equals("connectToSHealth")) {
             Log.d(APP_TAG, "connectToSHealth");
 
+            connector.setCallbackContext(callbackContext);
             connector.connect();
 
             return true;
