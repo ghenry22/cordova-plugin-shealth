@@ -35,6 +35,7 @@ public class SHealthConnector {
     Activity activity;
     CallbackContext callbackContext;
     CallbackContext observerCallbackContext;
+    HealthConnectionErrorResult mConnError;
 
     /** Default Constructor.
      *
@@ -100,6 +101,22 @@ public class SHealthConnector {
         mStore = new HealthDataStore(activity.getApplicationContext(), mConnectionListener);
         // Request the connection to the health data store
         mStore.connectService();
+    }
+
+    /** Resolve any connection error if has resolution
+     *  refer to : http://img-developer.samsung.com/onlinedocs/health/android/data/com/samsung/android/sdk/healthdata/HealthConnectionErrorResult.html
+     */
+    public void resolveConnectionError() {
+        if (mConnError != null && mConnError.hasResolution()) {
+            mConnError.resolve(activity);
+            PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"TYPE\":\"OK\",\"MESSAGE\":\"Ok.\"}");
+            //pluginResult.setKeepCallback(true);
+            callbackContext.sendPluginResult(pluginResult);
+        } else {
+            PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"TYPE\":\"OK\",\"MESSAGE\":\"No Resolution can be made.\"}");
+            //pluginResult.setKeepCallback(true);
+            callbackContext.sendPluginResult(pluginResult);
+        }
     }
 
     /** Callback for callHealthPermissionManager
@@ -243,7 +260,32 @@ public class SHealthConnector {
         @Override
         public void onConnectionFailed(HealthConnectionErrorResult error) {
             Log.d(APP_TAG, "Health data service is not available.");
-            PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"TYPE\":\"ERROR\",\"MESSAGE\":\"Health data service is not available.\"}");
+
+            mConnError = error;
+            String message = "Connection with Samsung Health is not available";
+            String hasResolution = "false";
+            if (error.hasResolution()) {
+                hasResolution = "true";
+                switch(error.getErrorCode()) {
+                    case HealthConnectionErrorResult.PLATFORM_NOT_INSTALLED:
+                        message = "Please install Samsung Health";
+                        break;
+                    case HealthConnectionErrorResult.OLD_VERSION_PLATFORM:
+                        message = "Please upgrade Samsung Health";
+                        break;
+                    case HealthConnectionErrorResult.PLATFORM_DISABLED:
+                        message = "Please enable Samsung Health";
+                        break;
+                    case HealthConnectionErrorResult.USER_AGREEMENT_NEEDED:
+                        message = "Please agree with Samsung Health policy";
+                        break;
+                    default:
+                        message = "Please make Samsung Health available";
+                        break;
+                }
+            }
+
+            PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"TYPE\":\"ERROR\",\"MESSAGE\":\""+message+"\",\"HAS_RESOLUTION\":"+hasResolution+"}");
             //pluginResult.setKeepCallback(true);
             callbackContext.sendPluginResult(pluginResult);
         }

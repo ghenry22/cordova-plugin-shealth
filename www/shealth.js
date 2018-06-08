@@ -7,6 +7,9 @@ module.exports = {
     connectToSHealth: function (name, successCallback, errorCallback) {
         cordova.exec(successCallback, errorCallback, "SHealth", "connectToSHealth", [name]);
     },
+    resolveConnectToSHealth: function (name, successCallback, errorCallback) {
+        cordova.exec(successCallback, errorCallback, "SHealth", "resolveConnectToSHealth", [name]);
+    },
     callHealthPermissionManager: function (name, successCallback, errorCallback) {
         cordova.exec(successCallback, errorCallback, "SHealth", "callHealthPermissionManager", [name]);
     },

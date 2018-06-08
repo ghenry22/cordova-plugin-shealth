@@ -516,6 +516,11 @@ public class DataReporter {
             resolver.read(request).setResultListener(pmListener);
         } catch (Exception e) {
             Log.e(APP_TAG, e.getClass().getName() + " - " + e.getMessage());
+            if (callbackContext != null) {
+                PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"TYPE\":\"ERROR\",\"MESSAGE\":\""+e.getMessage()+"\"}");
+                //pluginResult.setKeepCallback(true);
+                callbackContext.sendPluginResult(pluginResult);
+            }
         }
     }
 
@@ -539,6 +544,11 @@ public class DataReporter {
             resolver.read(request).setResultListener(pmListener);
         } catch (Exception e) {
             Log.e(APP_TAG, e.getClass().getName() + " - " + e.getMessage());
+            if (callbackContext != null) {
+                PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"TYPE\":\"ERROR\",\"MESSAGE\":\""+e.getMessage()+"\"}");
+                //pluginResult.setKeepCallback(true);
+                callbackContext.sendPluginResult(pluginResult);
+            }
         }
     }
 

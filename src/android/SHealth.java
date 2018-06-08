@@ -58,7 +58,13 @@ public class SHealth extends CordovaPlugin {
             connector.connect();
 
             return true;
+        } else if (action.equals("resolveConnectToSHealth")) {
+            Log.d(APP_TAG, "resolveConnectToSHealth");
 
+            connector.setCallbackContext(callbackContext);
+            connector.resolveConnectionError();
+
+            return true;
         } else if (action.equals("callHealthPermissionManager")) {
             Log.d(APP_TAG, "callHealthPermissionManager");
 
