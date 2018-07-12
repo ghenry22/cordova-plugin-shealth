@@ -158,9 +158,10 @@ public class DataReporter {
 
     public void startReadStepCount(long pStartTime, long pEndTime) {
         // StepCount
-        readHealthConstant(
+        readHealthConstantWithLocalTimeRange(
                 pStartTime,
                 pEndTime,
+                HealthConstants.StepCount.TIME_OFFSET,
                 HealthConstants.StepCount.START_TIME,
                 HealthConstants.StepCount.HEALTH_DATA_TYPE,
                 new String[] {
@@ -251,9 +252,10 @@ public class DataReporter {
 
     public void startReadSleep(long pStartTime, long pEndTime) {
         // Sleep
-        readHealthConstant(
+        readHealthConstantWithLocalTimeRange(
                 pStartTime,
                 pEndTime,
+                HealthConstants.Sleep.TIME_OFFSET,
                 HealthConstants.Sleep.START_TIME,
                 HealthConstants.Sleep.HEALTH_DATA_TYPE,
                 new String[] {
@@ -510,6 +512,40 @@ public class DataReporter {
                 .setDataType(hcHDT)
                 .setProperties(hcString)
                 .setFilter(filter)
+                .build();
+
+        try {
+            resolver.read(request).setResultListener(pmListener);
+        } catch (Exception e) {
+            Log.e(APP_TAG, e.getClass().getName() + " - " + e.getMessage());
+            if (callbackContext != null) {
+                PluginResult pluginResult = new PluginResult(PluginResult.Status.ERROR, "{\"TYPE\":\"ERROR\",\"MESSAGE\":\""+e.getMessage()+"\"}");
+                //pluginResult.setKeepCallback(true);
+                callbackContext.sendPluginResult(pluginResult);
+            }
+        }
+    }
+
+    /** Starts the database query for a specific {@link HealthConstants}
+     *
+     * @param pStartTime     Earliest time of measurement
+     * @param pEndTime      Latest time of measurement
+     * @param hcTimeOffset  Enum for time offset, e.g. HealthConstants.StepCount.TIME_OFFSET
+     * @param hcStartTime   Enum for start time
+     * @param hcHDT
+     * @param hcString      Array of requestet attributes
+     * @param pmListener    Callback function for results
+     */
+    private void readHealthConstantWithLocalTimeRange(long pStartTime, long pEndTime, String hcTimeOffset, String hcStartTime, String hcHDT, String[] hcString, HealthResultHolder.ResultListener<ReadResult> pmListener) {
+        HealthDataResolver resolver = new HealthDataResolver(mStore, null);
+
+        // Filter filter = Filter.and(Filter.greaterThanEquals(hcStartTime, pStartTime),
+        //         Filter.lessThan(hcStartTime, pEndTime));
+
+        HealthDataResolver.ReadRequest request = new ReadRequest.Builder()
+                .setDataType(hcHDT)
+                .setProperties(hcString)
+                .setLocalTimeRange(hcStartTime, hcTimeOffset, pStartTime, pEndTime)
                 .build();
 
         try {

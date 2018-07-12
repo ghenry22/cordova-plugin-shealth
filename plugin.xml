@@ -24,13 +24,13 @@
     </config-file>
     <config-file target="AndroidManifest.xml" parent="/*/application">
         <meta-data android:name="com.samsung.cordova.health" android:value="true" />
-        <meta-data android:name="com.samsung.android.health.permission.read" android:value="com.samsung.health.step_count;com.samsung.shealth.step_daily_trend;com.samsung.health.sleep" />
+        <meta-data android:name="com.samsung.android.health.permission.read" android:value="com.samsung.health.step_count;com.samsung.health.sleep" />
     </config-file>
     <config-file target="AndroidManifest.xml" parent="/*">
         <uses-permission android:name="android.permission.INTERNET" />
     </config-file>
     <lib-file
-      src="src/android/libs/samsung-digital-health-healthdata-1.2.1.jar"
+      src="src/android/libs/samsung-health-data-v1.3.0.jar"
       target-dir="libs/"
       arch="device"
     />
