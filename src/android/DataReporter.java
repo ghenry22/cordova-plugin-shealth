@@ -40,7 +40,9 @@ import org.apache.cordova.*;
 
 import android.app.Activity;
 
+import java.util.TimeZone;
 import java.util.Calendar;
+import java.text.SimpleDateFormat;
 
 public class DataReporter {
     private final HealthDataStore mStore;
@@ -51,6 +53,8 @@ public class DataReporter {
     boolean isObserverAdded = false;
 
     String APP_TAG = "CordovaSHealthPlugin";
+
+    String DATE_FORMAT = "yyyy-MM-dd";
 
     private final HealthDataObserver mObserver = new HealthDataObserver(null) {
 
@@ -182,10 +186,44 @@ public class DataReporter {
         );
     }
 
-    public void startReadStepCountTrend(long pStartTime, long pEndTime) {
+    
+    // ‘time’ param is a local time.
+    public static long getUtcStartOfDay(long time) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(time);
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int date = calendar.get(Calendar.DATE);
 
-        Filter filter1 = Filter.and(Filter.greaterThanEquals("day_time", pStartTime),
-                Filter.lessThan("day_time", pEndTime));
+        calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DATE, date);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        return calendar.getTimeInMillis();
+    }
+
+    public static String getFormattedDateFromTime(long time, String format) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(time);
+        
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+        return dateFormat.format(calendar.getTime());
+    }
+
+    /*
+        pStartTime and pEndTime : local time
+     */
+    public void startReadStepCountTrend(long pStartTime, long pEndTime) {
+        long startTimeInUtcStartOfDay = getUtcStartOfDay(pStartTime);
+        long endTimeInUtcStartOfDay = getUtcStartOfDay(pEndTime);
+
+        Filter filter1 = Filter.and(Filter.greaterThanEquals("day_time", startTimeInUtcStartOfDay),
+                Filter.lessThanEquals("day_time", endTimeInUtcStartOfDay));
         Filter filter = Filter.and(filter1, Filter.eq("source_type", -2));        
 
         // StepCount
@@ -656,8 +694,12 @@ public class DataReporter {
                         // day_time + (23*3600 + 59*60 + 59) * 1000
                         long end_time = day_time + addMS;
                         
+                        String calendarDate = getFormattedDateFromTime(day_time, DATE_FORMAT);
+
                         array.add(Json.createObjectBuilder().
                                 add("TYPE", "StepCountTrend").
+                                add("DAY_TIME", day_time).
+                                add("DATE", calendarDate).
                                 add("START_TIME", day_time).
                                 add("END_TIME", end_time).
                                 add("TIME_OFFSET", 0).
