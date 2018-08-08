@@ -1,0 +1,35 @@
+{
+  "name": "com.wopo.shealth",
+  "version": "0.7.0",
+  "description": "modified version for Income - OrangeHealth App",
+  "cordova": {
+    "id": "com.wopo.shealth",
+    "platforms": [
+      "android",
+      "ios",
+      "wp7"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dmassandy/cordova-plugin-shealth.git"
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios",
+    "cordova-wp7"
+  ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.4.0"
+    }
+  ],
+  "author": "dbene (original author)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dmassandy/cordova-plugin-shealth/issues"
+  },
+  "homepage": "https://github.com/dmassandy/cordova-plugin-shealth#readme"
+}
