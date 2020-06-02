@@ -1,0 +1,36 @@
+{
+  "name": "cordova-plugin-shealth",
+  "version": "3.0.5",
+  "description": "Access to Samsung Health for Cordova apps",
+  "cordova": {
+    "id": "cordova-plugin-shealth",
+    "platforms": ["android"]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ghenry22/cordova-plugin-shealth.git"
+  },
+  "keywords": [
+    "cordova",
+    "fitness",
+    "samsung",
+    "shealth",
+    "health",
+    "plugin",
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=4.0.0"
+    }
+  ],
+  "author": "ghenry22",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ghenry22/cordova-plugin-shealth/issues"
+  },
+  "homepage":
+    "https://github.com/ghenry22/cordova-plugin-shealth#readme"
+}

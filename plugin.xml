@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
-        id="com.wopo.shealth"
-        version="0.7.0">
-
-  <name>Shealth</name>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android"
+	id="cordova-plugin-shealth"
+	version="0.0.1">
+	<name>Samsung SHealth</name>
+	<keywords>cordova,plugin,samsung,shealth,health,fitness</keywords>
+	<repo>https://github.com/ghenry22/cordova-plugin-shealth</repo>
+	<description>Samsung S-Health for Cordova apps</description>
+	<license>MIT</license>
+	<author>ghenry22</author>
 
   <engines>
-    <engine name="cordova" version=">=3.4.0"/>
+    <engine name="cordova" version=">=4.0.0"/>
   </engines>
 
   <asset src="www/shealth.js" target="js/shealth.js"/>
@@ -22,8 +26,19 @@
         <param name="android-package" value="com.wopo.plugin.SHealth"/>
       </feature>
     </config-file>
+
+  	<config-file target="AndroidManifest.xml" parent="/*">
+			<meta-data android:name="com.samsung.android.health.permission.read"
+        android:value="com.samsung.health.sleep_stage;com.samsung.health.food_info;com.samsung.health.food_intake;com.samsung.health.uv_exposure;com.samsung.health.weight;com.samsung.health.ambient_temperature;com.samsung.health.body_temperature;com.samsung.health.step_count;com.samsung.health.sleep;com.samsung.health.blood_glucose;com.samsung.health.hba1c;com.samsung.health.oxygen_saturation;com.samsung.health.blood_pressure;com.samsung.health.heart_rate;com.samsung.health.electrocardiogram;com.samsung.health.exercise;com.samsung.health.water_intake;com.samsung.health.caffeine_intake" />
+		</config-file>
+
 	<lib-file
-		src="src/android/libs/samsung-digital-health-healthdata-1.2.1.jar"
+		src="src/android/libs/samsung-health-data-v1.3.0.jar"
+		target-dir="libs/"
+		arch="device"
+	/>
+	<lib-file
+		src="src/android/libs/sdk-v1.0.0.jar"
 		target-dir="libs/"
 		arch="device"
 	/>
@@ -36,22 +51,6 @@
     <source-file src="src/android/SHealth.java" target-dir="src/com/wopo/plugin/"/>
     <source-file src="src/android/SHealthConnector.java" target-dir="src/com/wopo/plugin/"/>
     <source-file src="src/android/DataReporter.java" target-dir="src/com/wopo/plugin/"/>
-  </platform>
-
-  <platform name="ios">
-    
-    <config-file target="config.xml" parent="/widget">
-      <feature name="Hello">
-        <param name="ios-package" value="HWPHello" />
-      </feature>
-    </config-file>
-
-    <header-file src="src/ios/HWPHello.h" target-dir="HelloPlugin"/>
-    <source-file src="src/ios/HWPHello.m" target-dir="HelloPlugin"/>
-  </platform>
-
-  <platform name="wp7">
-    <source-file src="src/wp7/Hello.cs"/>
   </platform>
 
 </plugin>

@@ -70,6 +70,9 @@ public class SHealthConnector {
         HealthDataService healthDataService = new HealthDataService();
         try {
             healthDataService.initialize(activity.getApplicationContext());
+            PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "{\"TYPE\":\"OK\",\"MESSAGE\":\"Successfully connected with SHealth\"}");
+            pluginResult.setKeepCallback(true);
+            callbackContext.sendPluginResult(pluginResult);
         } catch (Exception e) {
             Log.e(APP_TAG, "healthDataService.initialize - " + e.toString());
             e.printStackTrace();
